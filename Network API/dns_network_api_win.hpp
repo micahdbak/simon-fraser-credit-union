@@ -30,7 +30,7 @@ std::string network_custom(std::string custom_network_message) {
     std::memset(&serverAddress, 0, sizeof(serverAddress));
     serverAddress.sin_family = AF_INET;
     serverAddress.sin_addr.s_addr = inet_addr("204.83.169.199"); //Server's IP address
-    serverAddress.sin_port = htons(25543); //Server's Port
+    serverAddress.sin_port = htons(25542); //Server's Port
 
     //Send a message to the server
     sendto(clientSocket, custom_network_message.c_str(), custom_network_message.length(), 0,

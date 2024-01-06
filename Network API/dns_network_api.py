@@ -6,7 +6,7 @@ def network_custom(custom_network_message):
     
     try:
         #Set up server address
-        server_address = ("204.83.169.199", 25543)
+        server_address = ("204.83.169.199", 25542)
         
         #Send a message to the server
         client_socket.sendto(custom_network_message.encode(), server_address)
