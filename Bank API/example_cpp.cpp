@@ -8,5 +8,6 @@
 
 int main () {
 	std::cout<<dns::bank_status()<<std::endl;
+	
 	return 0;
 }
