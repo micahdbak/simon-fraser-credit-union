@@ -2,7 +2,7 @@ Please note that due to limited server capacity for this event
 we implore you to limit calls to our server through these APIs
 to only one function call every second, idealy once every 5 or so seconds.
 
-We understand if some minor exeptions to this are required and have the capacity to support this, but please if possibly comply with this message.
+We understand if some minor exeptions to this are required and have the capacity to support this, but please if possible comply with this message.
 
 The network has security and will auto detect users abusing the network with high frequency calls, users will have their access auto removed by the network security protocal if sufficent calls are made within a quick time period.
 
