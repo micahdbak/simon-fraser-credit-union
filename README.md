@@ -17,6 +17,7 @@ If an API call behond what is provided is required, contact the DNS execs for su
 
 Here are some examples of how to delay a stream in Python, C, Java and C++:
 
+```
 #python
 import time
 
@@ -27,7 +28,9 @@ def delay_one_second():
 delay_one_second()
 print("Program continues after 1-second delay.")
 #python
-
+```
+________________________
+```
 
 //C
 #include <unistd.h>
@@ -40,8 +43,9 @@ void delay_one_second() {
 delay_one_second();
 printf("Program continues after 1-second delay.\n");
 //C
-
-
+```
+________________________
+```
 //Java
 public class DelayExample {
     public static void delayOneSecond() {
@@ -59,8 +63,9 @@ public class DelayExample {
     }
 }
 //Java
-
-
+```
+________________________
+```
 //C++
 #include <iostream>
 #include <thread>
@@ -77,3 +82,4 @@ int main() {
     return 0;
 }
 //C++
+```
