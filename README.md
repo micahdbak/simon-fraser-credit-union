@@ -10,9 +10,9 @@ We understand if some minor exeptions to this are required and have the capacity
 
 The network has security and will auto detect users abusing the network with high frequency calls, users will have their access auto removed by the network security protocal if sufficent calls are made within a quick time period.
 
-Also so please note this events APIs does not have high scurity built in there for please do not send any sensitive information via API calls or API calls behond the scope of this event.
+Also please note this event's APIs do not have high security built-in there, so please do not send any sensitive information via API calls (or API calls beyond the scope of this event).
 
-If an API call behond what is provided is required, contact the DNS execs for support in making a custom API call.
+If an API call beyond what is provided is required, contact the DNS execs for support in making a custom API call.
 
 
 Here are some examples of how to delay a stream in Python, C, Java and C++:
