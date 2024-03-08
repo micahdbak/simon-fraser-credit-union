@@ -144,3 +144,11 @@ def main():
 	print(result)
 main()
 ```
+________________________________
+Objective:
+```
+Be the first person to create a Bebit and or Credit Card Network.
+Sign up our merchent vendors.
+Sign up one of our execs to your network.
+And pay for your prize using balence from the DNS Bank(or your bank of choice).
+```
