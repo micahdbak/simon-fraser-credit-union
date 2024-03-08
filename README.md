@@ -90,7 +90,11 @@ Dependencies: BSD Sockets (Build into most UNIX-like Systems) || winsock (For C/
 
 ```
 bank_verify(account_id: str, subject: str, first_arg: str, second_arg="")
-#Bank Verifications take Account ID, String Inputs's ("NAME", "CODE", "PASS") and then the corresponding verifications and will return if the Account ID is accociated with the correspoing name/transaction code/password. Use First Arg for: First Name. Transaction Code, Password. Use Secont Arg for: Last Name. Will return a string status
+#Bank Verifications take Account ID, String Inputs's ("NAME", "CODE", "PASS")
+#and then the corresponding verifications and will return if the Account ID
+#is accociated with the correspoing name/transaction code/password.
+#Use First Arg for: First Name. Transaction Code, Password.
+#Use Secont Arg for: Last Name. Will return a string status
 
 bank_transfer(account_from:str, account_to:str, secure_code: str, amount: str)
 #Bank Transfers Take a From Account & From Transaction Code and deposit the amount in the To Account. Will return a string message
@@ -103,4 +107,31 @@ bank_status()
 
 bank_time()
 #Will return the current time of the Bank Server (In Saskachuwan Time CST)
+```
+```
+#Example Use:
+import dns_bank_api as dns
+
+def main():
+	result = dns.bank_status()
+	print(result)
+main()
+```
+________________________________
+DNS Network API:
+
+Dependencies: BSD Sockets (Build into most UNIX-like Systems) || winsock (For C/C++ on Windows Only)
+
+```
+network_check(network_id: str)
+#Network Checks will inform the user how many packets are waiting to be processed in the server. Returns a String.
+
+network_request(network_id: str)
+#Network Requests will gram the oldest stored packet in the network que return it to you as a string and the remove the packet from the que.
+
+network_status()
+#Will return if the Network Server is Online
+
+network_time()
+#Will return the current time of the Network Server (In Saskachuwan Time CST)
 ```
