@@ -135,3 +135,12 @@ network_status()
 network_time()
 #Will return the current time of the Network Server (In Saskachuwan Time CST)
 ```
+```
+#Example Use:
+import dns_network_api as dns
+
+def main():
+	result = dns.network_check("888")
+	print(result)
+main()
+```
