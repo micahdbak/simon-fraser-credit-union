@@ -147,8 +147,11 @@ main()
 ________________________________
 Objective:
 ```
-Be the first person to create a Bebit and or Credit Card Network.
+Be the first person to create a Debit and or Credit Card Network(bonus points for a Credit Network).
 Sign up our merchent vendors.
 Sign up one of our execs to your network.
 And pay for your prize using balence from the DNS Bank(or your bank of choice).
+
+Debit Networks Need Only To Transfer a Balence From One Account To Another.
+Credit Networks Need a More Advanced System Where In Balence Reaches The Merchent Account(Minus A Transaction Fee), Debt Is Issued To The Customer and Some Form of Points/Cashback is Given To Customers.
 ```
