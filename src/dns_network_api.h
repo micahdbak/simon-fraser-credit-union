@@ -1,27 +1,22 @@
-//WARNING UNTESTED
-
-#define DNS_NETWORK_API
+#ifndef DNS_NETWORK_API_H
+#define DNS_NETWORK_API_H
 
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <winsock2.h>
+
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h>
 
 #define BUFFER_SIZE 1024
 
-char* dns_network_custom(const char* custom_network_message) {
-    //Initialize Winsock
-    WSADATA wsaData;
-    if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
-        perror("WSAStartup failed");
-        return "Error: Could Not Initialize Winsock";
-    }
-
+char * dns_network_custom(const char* custom_network_message) {
     //Create a UDP socket
-    SOCKET clientSocket = socket(AF_INET, SOCK_DGRAM, 0);
-    if (clientSocket == INVALID_SOCKET) {
+    int clientSocket = socket(AF_INET, SOCK_DGRAM, 0);
+    if (clientSocket == -1) {
         perror("Error creating socket");
-        WSACleanup();
         return "Error: Could Not Make A Socket To Contact Server With";
     }
 
@@ -36,45 +31,47 @@ char* dns_network_custom(const char* custom_network_message) {
     sendto(clientSocket, custom_network_message, strlen(custom_network_message), 0,
            (struct sockaddr*)&serverAddress, sizeof(serverAddress));
 
-    char* buffer = (char*)malloc(BUFFER_SIZE);
+    char * buffer = (char *)malloc(1024*sizeof(char));
 
     //Receive the response from the server
-    int serverAddrLen = sizeof(serverAddress);
-    ssize_t receivedBytes = recvfrom(clientSocket, buffer, BUFFER_SIZE, 0,
-                                     (struct sockaddr*)&serverAddress, &serverAddrLen);
+    ssize_t receivedBytes = recvfrom(clientSocket, buffer, 1024*sizeof(char), 0, NULL, NULL);
     if (receivedBytes == -1) {
         perror("Error receiving data.");
-        closesocket(clientSocket);
+        close(clientSocket);
         free(buffer);
-        WSACleanup();
-        return "Error: No Response From Server.";
+        return "Error: No Responce From Server.";
     }
 
     //Process received data
     buffer[receivedBytes] = '\0';
 
     //Close the socket
-    closesocket(clientSocket);
-    WSACleanup();
+    close(clientSocket);
     return buffer;
 }
 
-char* dns_network_check(const char* network_id) {
-    char custom_message[BUFFER_SIZE];
+//Check how many unread packets are stored in the server
+char * dns_network_check(const char* network_id) {
+    char custom_message[1024];
     snprintf(custom_message, sizeof(custom_message), "check\n%s", network_id);
     return dns_network_custom(custom_message);
 }
 
-char* dns_network_request(const char* network_id) {
-    char custom_message[BUFFER_SIZE];
+//recived oldest unchecked packet
+char * dns_network_request(const char* network_id) {
+    char custom_message[1024];
     snprintf(custom_message, sizeof(custom_message), "request\n%s", network_id);
     return dns_network_custom(custom_message);
 }
 
-char* dns_network_status() {
+//Used to check if the Server is Online
+char * dns_network_status() {
     return dns_network_custom("status");
 }
 
-char* dns_network_time() {
+//request server time (mainly for client & server to calibrate timezone differneces)
+char * dns_network_time() {
     return dns_network_custom("time");
 }
+
+#endif
