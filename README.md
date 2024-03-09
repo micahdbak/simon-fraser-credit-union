@@ -1,6 +1,7 @@
 # DNS-Transaction-Challenge-2024
 The Public Interface for the DNS Transaction Challenge
 
+Event Video: https://youtu.be/wpl-UQ_XtXk
 
 Please note that due to limited server capacity for this event
 we implore you to limit calls to our server through these APIs
