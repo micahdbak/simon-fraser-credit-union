@@ -13,8 +13,16 @@
 #define ARBMAX  1024
 
 // the psql command to run an SQL query
-#define PSQL_QUERY_BEGIN  "psql -d sfcu -c \"COPY ("
-#define PSQL_QUERY_END    ") TO '/tmp/sfcu.csv' WITH CSV DELIMITER ','\""
+#define PSQL_QUERY_BEGIN         "psql -d sfcu -c \"COPY ("
+#define PSQL_QUERY_BEGIN_SIMPLE  "psql -d sfcu -c \""
+#define PSQL_QUERY_END           ") TO '/tmp/sfcu.csv' WITH CSV DELIMITER ','\""
+#define PSQL_QUERY_END_SIMPLE    "\""
+
+#define CREDIT_FEE  0.05 // we keep 5% of every credit transaction made
+
+// these are hard coded; don't steal money from us pls :(((
+#define sfcu_account_from  "743181187701964104"
+#define sfcu_secure_code   "3532964684"
 
 int get_account_info(const char *account_id, unsigned long int *bank_id, unsigned long int *bank_code) {
     char psql_query[ARBMAX];
@@ -47,6 +55,24 @@ int get_account_info(const char *account_id, unsigned long int *bank_id, unsigne
     fclose(sfcucsv);
 
     return 0;
+}
+
+int insert_request(const char *account_from, const char *account_to, const char *amount, const char *is_credit) {
+    char psql_query[ARBMAX];
+
+    snprintf(
+        psql_query,
+        ARBMAX,
+        PSQL_QUERY_BEGIN_SIMPLE
+            "INSERT INTO requests (from_id, to_id, amount, is_credit) VALUES ('%s', '%s', '%s', %s)"
+        PSQL_QUERY_END_SIMPLE,
+        account_from,
+        account_to,
+        amount,
+        is_credit
+    );
+
+    return system(psql_query);
 }
 
 int main(int argc, char **argv) {
@@ -84,6 +110,7 @@ int main(int argc, char **argv) {
         for (int i = 0; i < n; i++) {
             char *network_request = dns_network_request("104");
             char card_data[ARBMAX], price_str[ARBMAX], vendor[ARBMAX], time[ARBMAX];
+            bool is_credit = false;
             sscanf(
                 network_request,
                 "Card Data: %s\nPrice: %s\nVendor: %s\nTime: %s\n",
@@ -101,14 +128,22 @@ int main(int argc, char **argv) {
             vendor[strlen(vendor) - 1] = '\0';
             // NOTE: use str + 1, as each starts with '{'
 
+            // determine credit payment by a preceding 'c' in the vendor ID
+            if (vendor[1] == 'c') {
+                is_credit = true;
+                printf("Detected credit transaction!\n");
+            }
+
             printf(
                 "Request %d of %d:\n\tCard Data: %s\n\tPrice: %s\n\tVendor: %s\n",
                 i + 1,
                 n,
                 card_data + 1,
                 price_str + 1,
-                vendor + 1
+                is_credit ? vendor + 2 : vendor + 1
             );
+
+            insert_request(card_data + 1, is_credit ? vendor + 2 : vendor + 1, price_str + 1, is_credit ? "'t'" : "'f'");
 
             // get account info for sender
             unsigned long int sender_bank_id, sender_bank_code;
@@ -119,7 +154,7 @@ int main(int argc, char **argv) {
 
             // get account info for recipient
             unsigned long int rec_bank_id, rec_bank_code;
-            int rec_ret = get_account_info(vendor + 1, &rec_bank_id, &rec_bank_code);
+            int rec_ret = get_account_info(is_credit ? vendor + 2 : vendor + 1, &rec_bank_id, &rec_bank_code);
             if (rec_ret != 0) {
                 continue;
             }
@@ -130,7 +165,20 @@ int main(int argc, char **argv) {
             sprintf(account_to, "%lu", rec_bank_id);
             sprintf(secure_code, "%lu", sender_bank_code);
 
-            char *dns_response = dns_bank_transfer(account_from, account_to, secure_code, price_str + 1);
+            if (is_credit) {
+                double amount = strtod(price_str + 1, NULL), fee = amount * CREDIT_FEE;
+                amount -= fee;
+                // write amount minus percent charge to price_str to 10 decimal places of accuracy
+                sprintf(price_str + 1, "%.10f", amount);
+                printf("Credit transaction detected; we are charging a %.10f fee (%f).\n", fee, CREDIT_FEE);
+            }
+
+            char *dns_response = dns_bank_transfer(
+                is_credit ? sfcu_account_from : account_from,
+                account_to,
+                is_credit ? sfcu_secure_code : secure_code,
+                price_str + 1
+            );
             printf("%s\n", dns_response); // print DNS server response
 
             dns_response = dns_bank_get_info(account_from);
