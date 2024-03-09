@@ -4,8 +4,8 @@ The Public Interface for the DNS Transaction Challenge
 Event Video: https://youtu.be/wpl-UQ_XtXk
 
 NFC Card Encoding Apps:
-Android: https://play.google.com/store/apps/details?id=com.wakdev.wdnfc&hl=en_CA&gl=US
-IOS: https://apps.apple.com/us/app/nfc-tools/id1252962749
+Android: ```https://play.google.com/store/apps/details?id=com.wakdev.wdnfc&hl=en_CA&gl=US```
+IOS: ```https://apps.apple.com/us/app/nfc-tools/id1252962749```
 
 Please note that due to limited server capacity for this event
 we implore you to limit calls to our server through these APIs
