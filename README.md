@@ -86,7 +86,7 @@ ________________________________
 
 DNS Bank API:
 
-Comprehensive Video On The Bank API (Watch with your team): ```https://youtu.be/GpLtFENNptM?si=aBU6v1HWYMXiCeY-```
+Comprehensive Video On The Bank API (Watch with your team): https://youtu.be/GpLtFENNptM?si=aBU6v1HWYMXiCeY-
 
 Dependencies: BSD Sockets (Build into most UNIX-like Systems) || winsock (For C/C++ on Windows Only)
 
@@ -122,7 +122,7 @@ main()
 ________________________________
 DNS Network API:
 
-Comprehensive Video On The Network API (Watch with your team): ```https://youtu.be/jWtIFK3_osU?si=05GuIq_zCIBva-W6```
+Comprehensive Video On The Network API (Watch with your team): https://youtu.be/jWtIFK3_osU?si=05GuIq_zCIBva-W6
 
 Dependencies: BSD Sockets (Build into most UNIX-like Systems) || winsock (For C/C++ on Windows Only)
 
