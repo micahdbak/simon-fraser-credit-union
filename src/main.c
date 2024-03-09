@@ -12,6 +12,10 @@
 // arbitrary maximum length of a character array
 #define ARBMAX  1024
 
+// the psql command to run an SQL query
+#define PSQL_QUERY_BEGIN  "psql -d sfcu -c \""
+#define PSQL_QUERY_END    "\""
+
 int main(int argc, char **argv) {
     printf("Starting the SFCU...\n");
 
@@ -72,6 +76,25 @@ int main(int argc, char **argv) {
                 price_str + 1,
                 vendor + 1
             );
+
+            char requests_insert_query[ARBMAX];
+
+            snprintf(
+                requests_insert_query,
+                ARBMAX,
+                PSQL_QUERY_BEGIN
+                    "INSERT INTO requests(card_data, price, vendor) VALUES ('%s', %s, '%s');"
+                PSQL_QUERY_END,
+                card_data + 1,
+                price_str + 1,
+                vendor + 1
+            );
+
+            printf("%s\n", requests_insert_query);
+
+            int ret = system(requests_insert_query);
+
+            printf("...SQL query returned %d.\n", ret);
         }
 
         printf("Done.\n");
