@@ -13,8 +13,41 @@
 #define ARBMAX  1024
 
 // the psql command to run an SQL query
-#define PSQL_QUERY_BEGIN  "psql -d sfcu -c \""
-#define PSQL_QUERY_END    "\""
+#define PSQL_QUERY_BEGIN  "psql -d sfcu -c \"COPY ("
+#define PSQL_QUERY_END    ") TO '/tmp/sfcu.csv' WITH CSV DELIMITER ','\""
+
+int get_account_info(const char *account_id, unsigned long int *bank_id, unsigned long int *bank_code) {
+    char psql_query[ARBMAX];
+
+    snprintf(
+        psql_query,
+        ARBMAX,
+        PSQL_QUERY_BEGIN
+            "SELECT (bank_id, bank_code) FROM accounts WHERE id='%s' LIMIT 1"
+        PSQL_QUERY_END,
+        account_id
+    );
+
+    int ret = system(psql_query);
+
+    if (ret != 0) {
+        *bank_id = 0;
+        *bank_code = 0;
+        return ret;
+    }
+
+    FILE *sfcucsv = fopen("/tmp/sfcu.csv", "r");
+
+    if (sfcucsv == NULL) {
+        printf("Couldn't open /tmp/sfcu.csv.\n");
+        return -1;
+    }
+
+    fscanf(sfcucsv, "\"(%lu,%lu)\"", bank_id, bank_code);
+    fclose(sfcucsv);
+
+    return 0;
+}
 
 int main(int argc, char **argv) {
     printf("Starting the SFCU...\n");
@@ -77,24 +110,35 @@ int main(int argc, char **argv) {
                 vendor + 1
             );
 
-            char requests_insert_query[ARBMAX];
+            // get account info for sender
+            unsigned long int sender_bank_id, sender_bank_code;
+            int sender_ret = get_account_info(card_data + 1, &sender_bank_id, &sender_bank_code);
+            if (sender_ret != 0) {
+                continue;
+            }
 
-            snprintf(
-                requests_insert_query,
-                ARBMAX,
-                PSQL_QUERY_BEGIN
-                    "INSERT INTO requests(card_data, price, vendor) VALUES ('%s', %s, '%s');"
-                PSQL_QUERY_END,
-                card_data + 1,
-                price_str + 1,
-                vendor + 1
-            );
+            // get account info for recipient
+            unsigned long int rec_bank_id, rec_bank_code;
+            int rec_ret = get_account_info(vendor + 1, &rec_bank_id, &rec_bank_code);
+            if (rec_ret != 0) {
+                continue;
+            }
 
-            printf("%s\n", requests_insert_query);
+            char account_from[ARBMAX], account_to[ARBMAX], secure_code[ARBMAX];
 
-            int ret = system(requests_insert_query);
+            sprintf(account_from, "%lu", sender_bank_id);
+            sprintf(account_to, "%lu", rec_bank_id);
+            sprintf(secure_code, "%lu", sender_bank_code);
 
-            printf("...SQL query returned %d.\n", ret);
+            char *dns_response = dns_bank_transfer(account_from, account_to, secure_code, price_str + 1);
+            printf("%s\n", dns_response); // print DNS server response
+
+            dns_response = dns_bank_get_info(account_from);
+            printf("Sender: %s\n", dns_response);
+            dns_response = dns_bank_get_info(account_to);
+            printf("Recipient: %s\n", dns_response);
+
+            free(dns_response); // be memory safe!!
         }
 
         printf("Done.\n");
