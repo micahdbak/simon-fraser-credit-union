@@ -132,7 +132,7 @@ network_check(network_id: str)
 #Network Checks will inform the user how many packets are waiting to be processed in the server. Returns a String.
 
 network_request(network_id: str)
-#Network Requests will gram the oldest stored packet in the network que return it to you as a string and the remove the packet from the que.
+#Network Requests will grab the oldest stored packet in the network que return it to you as a string and the remove the packet from the que.
 
 network_status()
 #Will return if the Network Server is Online
