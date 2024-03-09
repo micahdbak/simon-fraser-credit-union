@@ -157,3 +157,8 @@ Credit Networks Need a More Advanced System Where In Balence Reaches The Merchen
 
 Servers Are Not Required For This Event, However Some Form Of Account System Will Be Needed On Your Network To Register Accounts To Your Transaction Network.
 ```
+________________________________
+Download the DNS Payment Terminal Android App (If you don't have an Android, use the Terminals setup for the event)
+```
+https://github.com/DnSClub/DNS-Network-Terminal
+```
