@@ -14,6 +14,7 @@
 namespace dns {
 
 	std::string bank_custom(std::string custom_bank_message) {
+		
 	    //Create a UDP socket
 	    int clientSocket = socket(AF_INET, SOCK_DGRAM, 0);
 	    if (clientSocket == -1) {

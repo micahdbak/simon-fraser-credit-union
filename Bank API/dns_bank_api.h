@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -67,7 +68,7 @@
 
 	    //Rest of the function
 
-	    return message;
+	    return dns_bank_custom(message);
     }
 
     char* dns_bank_transfer(const char* account_from, const char* account_to, const char* secure_code, const char* amount) {
@@ -88,7 +89,7 @@
 
 	    //Rest of the function
 
-	    return message;
+	    return dns_bank_custom(message);
     }
 
     char* dns_bank_get_info(const char* account_id) {
